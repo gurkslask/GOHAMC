@@ -3,23 +3,33 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
+
+	_ "github.com/mattn/go-sqlite3"
 	// "os"
 )
 
 func main() {
 	fmt.Println("Hej")
-	db, err := sql.Open("sqlite3", "./data.db")
-	if err != nil {
-		log.Fatal(err)
+	sqlite := true
+	var db *sql.DB
+	var err error
+	if sqlite {
+		db, err = sql.Open("sqlite3", "./data.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	postgres := false
+	if postgres {
+		// postgres db
 	}
 	defer db.Close()
 
 	init := true
 
 	if init {
-		_, err = db.Exec("DROP TABLE sensors")
+		_, err := db.Exec("DROP TABLE sensors")
 		if err != nil {
 			log.Print(err)
 		}
@@ -54,4 +64,10 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+	GT11 := newSensor("GT11")
+	fmt.Println(GT11)
+	GT11.Write(db, 42.0)
+	fmt.Println(GT11)
+	GT11.Read(db)
+	fmt.Println(GT11)
 }
