@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Hej")
 	sqlite := true
 	var db *sql.DB
 	var err error
@@ -26,7 +25,7 @@ func main() {
 	}
 	defer db.Close()
 
-	init := true
+	init := false
 
 	if init {
 		_, err := db.Exec("DROP TABLE sensors")
@@ -70,4 +69,13 @@ func main() {
 	fmt.Println(GT11)
 	GT11.Read(db)
 	fmt.Println(GT11)
+	err = GT11.writeHistorian(db)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	GT12 := newSensor("GT12")
+	GT12.Write(db, 13.0)
+	GT12.Read(db)
+	GT12.writeHistorian(db)
 }
